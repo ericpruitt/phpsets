@@ -25,7 +25,6 @@ class Set implements Countable, IteratorAggregate
         } else if (is_array($members)) {
             $this->members = array_unique($members);
         } else if ($members) {
-            $this->members = Array();
             foreach ($members as $member) {
                 $this->add($member);
             }
@@ -82,61 +81,73 @@ class Set implements Countable, IteratorAggregate
     }
 
     /**
-     * Add members to set.
-     * @param mixed $other
+     * Add members from another set or sets to this set.
+     * @param mixed $other,...
      */
     public function update($other)
     {
-        $other = is_a($other, 'Set') ? $other->members : $other;
-        if (is_array($other)) {
-            $this->members = array_merge($this->members, $other);
-        } else {
-            foreach ($other as $member) {
-                $this->members[] = $member;
+        if (func_num_args() > 1) {
+            foreach (func_get_args() as $other) {
+                $this->update($other);
             }
-        }
+        } else {
+            $other = is_a($other, 'Set') ? $other->members : $other;
+            if (is_array($other)) {
+                $this->members = array_merge($this->members, $other);
+            } else {
+                foreach ($other as $member) {
+                    $this->members[] = $member;
+                }
+            }
 
-        $this->members = array_unique($this->members);
+            $this->members = array_unique($this->members);
+        }
     }
 
     /*
-     * Return union of instance set and another set.
-     * @param mixed $other
+     * Return union of instance set and one or more other sets.
+     * @param mixed $other,...
      * @return Set
      */
     public function union($other)
     {
-        $clone = clone $this;
-        $clone->update($other);
-        return $clone;
+        $_ = clone $this;
+        call_user_func_array(Array($_, 'update'), func_get_args());
+        return $_;
     }
 
     /**
-     * Remove elements in another set from this set.
-     * @param mixed $other
+     * Remove elements in another set or sets from this set.
+     * @param mixed $other,...
      */
     public function differenceUpdate($other)
     {
-        $other = is_a($other, 'Set') ? $other->members : $other;
-        if (is_array($other)) {
-            $this->members = array_diff($this->members, $other);
+        if (func_num_args() > 1) {
+            foreach (func_get_args() as $other) {
+                $this->differenceUpdate($other);
+            }
         } else {
-            foreach ($other as $member) {
-                $this->remove($member);
+            $other = is_a($other, 'Set') ? $other->members : $other;
+            if (is_array($other)) {
+                $this->members = array_diff($this->members, $other);
+            } else {
+                foreach ($other as $member) {
+                    $this->remove($member);
+                }
             }
         }
     }
 
     /**
-     * Return set with members from another set removed.
-     * @param mixed $other
+     * Return set with members from another set or sets removed.
+     * @param mixed $other,...
      * @return Set
      */
     public function difference($other)
     {
-        $clone = clone $this;
-        $clone->differenceUpdate($other);
-        return $clone;
+        $_ = clone $this;
+        call_user_func_array(Array($_, 'differenceUpdate'), func_get_args());
+        return $_;
     }
 
     /**
@@ -163,23 +174,39 @@ class Set implements Countable, IteratorAggregate
     }
 
     /**
-     * Return all elements in common with another set.
-     * @param mixed $other
+     * Remove all elements not shared with other sets from this set.
+     * @param mixed $other,...
+     */
+    public function intersectionUpdate($other)
+    {
+        if (func_num_args() > 1) {
+            foreach (func_get_args() as $other) {
+                $this->intersectionUpdate($other);
+            }
+        } else {
+            if (is_array($other)) {
+                $members = $other;
+            } else if (is_a($other, 'Set')) {
+                $members = $other->members;
+            } else {
+                $other = new self($other);
+                $members = $other->memebers;
+            }
+
+            $this->members = array_intersect($this->members, $members);
+        }
+    }
+
+    /**
+     * Return all elements in common with another set or sets.
+     * @param mixed $other,...
      * @return Set
      */
     public function intersection($other)
     {
-        $other = is_a($other, 'Set') ? $other : new self($other);
-        return new self(array_intersect($this->members, $other->members));
-    }
-
-    /**
-     * Remove all elements not shared with another set from this set.
-     * @param mixed $other
-     */
-    public function intersectionUpdate($other)
-    {
-        $this->members = $this->intersection($other)->members;
+        $_ = clone $this;
+        call_user_func_array(Array($_, 'intersectionUpdate'), func_get_args());
+        return $_;
     }
 
     /**
