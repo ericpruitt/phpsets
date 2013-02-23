@@ -16,7 +16,7 @@ class Set implements Countable, IteratorAggregate
      * @access public
      * @var array
      */
-    public $members = Array();
+    public $members = array();
 
     public function __construct($members = null)
     {
@@ -98,7 +98,7 @@ class Set implements Countable, IteratorAggregate
     public function update($other)
     {
         if (func_num_args() > 1) {
-            array_map(Array($this, 'update'), func_get_args());
+            array_map(array($this, 'update'), func_get_args());
         } else {
             $other = is_a($other, 'Set') ? $other->members : $other;
             if (is_array($other)) {
@@ -121,7 +121,7 @@ class Set implements Countable, IteratorAggregate
     public function union($other)
     {
         $_ = clone $this;
-        call_user_func_array(Array($_, 'update'), func_get_args());
+        call_user_func_array(array($_, 'update'), func_get_args());
         return $_;
     }
 
@@ -132,7 +132,7 @@ class Set implements Countable, IteratorAggregate
     public function differenceUpdate($other)
     {
         if (func_num_args() > 1) {
-            array_map(Array($this, 'differenceUpdate'), func_get_args());
+            array_map(array($this, 'differenceUpdate'), func_get_args());
         } else {
             $other = is_a($other, 'Set') ? $other->members : $other;
             if (is_array($other)) {
@@ -153,7 +153,7 @@ class Set implements Countable, IteratorAggregate
     public function difference($other)
     {
         $_ = clone $this;
-        call_user_func_array(Array($_, 'differenceUpdate'), func_get_args());
+        call_user_func_array(array($_, 'differenceUpdate'), func_get_args());
         return $_;
     }
 
@@ -185,7 +185,7 @@ class Set implements Countable, IteratorAggregate
     public function intersectionUpdate($other)
     {
         if (func_num_args() > 1) {
-            array_map(Array($this, 'intersectionUpdate'), func_get_args());
+            array_map(array($this, 'intersectionUpdate'), func_get_args());
         } else {
             if (is_array($other)) {
                 $members = $other;
@@ -208,7 +208,7 @@ class Set implements Countable, IteratorAggregate
     public function intersection($other)
     {
         $_ = clone $this;
-        call_user_func_array(Array($_, 'intersectionUpdate'), func_get_args());
+        call_user_func_array(array($_, 'intersectionUpdate'), func_get_args());
         return $_;
     }
 
@@ -261,7 +261,7 @@ class Set implements Countable, IteratorAggregate
      */
     public function clear()
     {
-        $this->members = Array();
+        $this->members = array();
     }
 
     /**
