@@ -98,7 +98,9 @@ class Set implements Countable, IteratorAggregate
     public function update($other)
     {
         if (func_num_args() > 1) {
-            array_map(array($this, 'update'), func_get_args());
+            foreach (func_get_args() as $other) {
+                $this->update($other);
+            }
         } else {
             $other = is_a($other, 'Set') ? $other->members : $other;
             if (is_array($other)) {
@@ -132,7 +134,9 @@ class Set implements Countable, IteratorAggregate
     public function differenceUpdate($other)
     {
         if (func_num_args() > 1) {
-            array_map(array($this, 'differenceUpdate'), func_get_args());
+            foreach (func_get_args() as $other) {
+                $this->differenceUpdate($other);
+            }
         } else {
             $other = is_a($other, 'Set') ? $other->members : $other;
             if (is_array($other)) {
@@ -185,7 +189,9 @@ class Set implements Countable, IteratorAggregate
     public function intersectionUpdate($other)
     {
         if (func_num_args() > 1) {
-            array_map(array($this, 'intersectionUpdate'), func_get_args());
+            foreach (func_get_args() as $other) {
+                $this->intersectionUpdate($other);
+            }
         } else {
             if (is_array($other)) {
                 $members = $other;
