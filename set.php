@@ -38,8 +38,19 @@ class Set implements Countable, IteratorAggregate
 
     public function __toString()
     {
+        $converted = '';
         asort($this->members);
-        return '{' . implode(', ', $this->members) . '}';
+        foreach ($this->members as $member) {
+            if ($converted) {
+                $converted .= ', ';
+            }
+            if(is_int($member) or is_float($member)) {
+                $converted .= $member;
+            } else {
+                $converted .= '"' . addslashes($member) . '"';
+            }
+        }
+        return '{' . $converted . '}';
     }
 
     public function count()
