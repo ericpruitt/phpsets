@@ -98,9 +98,7 @@ class Set implements Countable, IteratorAggregate
     public function update($other)
     {
         if (func_num_args() > 1) {
-            foreach (func_get_args() as $other) {
-                $this->update($other);
-            }
+            array_map(Array($this, 'update'), func_get_args());
         } else {
             $other = is_a($other, 'Set') ? $other->members : $other;
             if (is_array($other)) {
@@ -134,9 +132,7 @@ class Set implements Countable, IteratorAggregate
     public function differenceUpdate($other)
     {
         if (func_num_args() > 1) {
-            foreach (func_get_args() as $other) {
-                $this->differenceUpdate($other);
-            }
+            array_map(Array($this, 'differenceUpdate'), func_get_args());
         } else {
             $other = is_a($other, 'Set') ? $other->members : $other;
             if (is_array($other)) {
@@ -170,9 +166,7 @@ class Set implements Countable, IteratorAggregate
     public function symmetricDifference($other)
     {
         $other = is_a($other, 'Set') ? $other : new self($other);
-        $a = $other->difference($this);
-        $b = $this->difference($other);
-        return $a->union($b);
+        return $other->difference($this)->union($this->difference($other));
     }
 
     /**
@@ -191,9 +185,7 @@ class Set implements Countable, IteratorAggregate
     public function intersectionUpdate($other)
     {
         if (func_num_args() > 1) {
-            foreach (func_get_args() as $other) {
-                $this->intersectionUpdate($other);
-            }
+            array_map(Array($this, 'intersectionUpdate'), func_get_args());
         } else {
             if (is_array($other)) {
                 $members = $other;
