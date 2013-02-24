@@ -74,6 +74,17 @@ class Set implements Countable, IteratorAggregate
     }
 
     /**
+     * Return value indicating if two sets contain the same members.
+     * @param mixed $other
+     * @return bool
+     */
+    public function equals($other)
+    {
+        $other = is_a($other, 'Set') ? $other : new self($other);
+        return $this->map == $other->map;
+    }
+
+    /**
      * Add a member to the set.
      * @param mixed $member
      */
