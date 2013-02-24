@@ -37,7 +37,7 @@ class Set implements Countable, IteratorAggregate
         $converted = '';
         $keys = array_keys($this->map);
         foreach ($keys as $member) {
-            if ($converted) {
+            if (strlen($converted)) {
                 $converted .= ', ';
             }
             if (is_numeric($member)) {
@@ -218,7 +218,11 @@ class Set implements Countable, IteratorAggregate
      */
     public function isSubset($other)
     {
-        return !$this->isSuperset($other);
+        if (count($other) < count($this)) {
+            return false;
+        }
+
+        return !count($this->difference($other));
     }
 
     /**
