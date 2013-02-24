@@ -61,11 +61,16 @@ class Set implements Countable, IteratorAggregate
 
     /**
      * Return an array containing the members of the set.
+     * @param bool $sort Indicates if array should be sorted. Defaults to true.
      * @return array Array containing the members of the set.
      */
-    public function toArray()
+    public function toArray($sort = true)
     {
-        return array_keys($this->map);
+        $members = array_keys($this->map);
+        if ($sort) {
+            asort($members);
+        }
+        return $members;
     }
 
     /**
