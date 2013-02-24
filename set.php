@@ -1,11 +1,11 @@
 <?php
 /**
  * This is an implemention of mathematical sets in PHP based on Python's
- * implementation of sets. All methods that accept another Set will also work
- * with arrays or any object that implements the Iterator interface.
+ * implementation of sets. All methods that accept another Set or
+ * PrimitivesSet will also work with arrays or any object that implements the
+ * Iterator interface.
  *
  * @author Eric Pruitt <eric.pruitt@gmail.com>
- * @version 2013-02-20
  * @package set
  */
 
@@ -66,29 +66,23 @@ class Set implements Countable, IteratorAggregate
     /**
      * Add a member to the set.
      * @param mixed $member
-     * @return boolean Value indicating whether member was a new set member.
      */
     public function add($member)
     {
         if (!in_array($member, $this->members)) {
             $this->members[] = $member;
-            return true;
         }
-        return false;
     }
 
     /**
      * Remove a member from the set.
      * @param mixed $member
-     * @return boolean Value indicating whether member existed.
      */
     public function remove($member)
     {
-        if (($index = array_search($member, $this->members, true)) !== false) {
+        if (($index = array_search($member, $this->members)) !== false) {
             unset($this->members[$index]);
-            return true;
         }
-        return false;
     }
 
     /**
@@ -199,7 +193,7 @@ class Set implements Countable, IteratorAggregate
                 $members = $other->members;
             } else {
                 $other = new self($other);
-                $members = $other->memebers;
+                $members = $other->members;
             }
 
             $this->members = array_intersect($this->members, $members);
@@ -226,9 +220,12 @@ class Set implements Countable, IteratorAggregate
      */
     public function isSuperset($other)
     {
+        if (count($this) < count($other)) {
+            return false;
+        }
+
         $other = is_a($other, 'Set') ? $other : new self($other);
-        $merge = array_unique(array_merge($this->members, $other->members));
-        return count($merge) == count($this);
+        return count($other->symmetricDifference($this)) == 0;
     }
 
     /**
@@ -250,12 +247,12 @@ class Set implements Countable, IteratorAggregate
      */
     public function isDisjoint($other)
     {
-        return empty($this->intersection($other)->members);
+        return (bool) count($this->intersection($other));
     }
 
     /**
      * Remove and return an arbitrary item from this set.
-     * @return mixed
+     * @return mixed Returns the popped value or null of the set is empty.
      */
     public function pop()
     {
@@ -278,5 +275,118 @@ class Set implements Countable, IteratorAggregate
     public function contains($value)
     {
         return in_array($value, $this->members);
+    }
+}
+
+class PrimitivesSet extends Set
+{
+    /**
+     * Associative array with the set members stored as keys.
+     * @access protected
+     * @var array
+     */
+    protected $map = array();
+
+    public function __construct($members = null)
+    {
+        if ($members) {
+            foreach ($members as $member) {
+                $this->map[$member] = true;
+            }
+        }
+    }
+
+    public function __get($name)
+    {
+        if ($name != 'members') {
+            $trace = debug_backtrace();
+            trigger_error("Undefined property via __get(): $name" .
+                " in $trace[0][file] on line $trace[0][line]", E_USER_NOTICE);
+            return null;
+        }
+
+        return array_keys($this->map);
+    }
+
+    //! @copydoc Set::add()
+    public function add($member)
+    {
+        $this->map[$member] = true;
+    }
+
+    //! @copydoc Set::remove()
+    public function remove($member)
+    {
+        unset($this->map[$member]);
+    }
+
+    //! @copydoc Set::update()
+    public function update($other)
+    {
+        foreach (func_get_args() as $other) {
+            foreach ($other as $member) {
+                $this->map[$member] = true;
+            }
+        }
+    }
+
+    //! @copydoc Set::differenceUpdate()
+    public function differenceUpdate($other)
+    {
+        foreach (func_get_args() as $other) {
+            if (is_a($other, 'PrimitivesSet')) {
+                $this->map = array_diff_assoc($this->map, $other->map);
+            } else {
+                foreach ($other as $member) {
+                    unset($this->map[$member]);
+                }
+            }
+        }
+    }
+
+    //! @copydoc Set::symmetricDifferenceUpdate()
+    public function symmetricDifferenceUpdate($other)
+    {
+        $this->map = $this->symmetricDifference($other)->map;
+    }
+
+    //! @copydoc Set::intersectionUpdate()
+    public function intersectionUpdate($other)
+    {
+        foreach (func_get_args() as $other) {
+            if (is_a($other, 'PrimitivesSet')) {
+                $this->map = array_intersect_assoc($this->map, $other->map);
+            } else {
+                $newmap = array();
+                foreach ($other as $member) {
+                    if (isset($this->map[$member])) {
+                        $newmap[$member] = true;
+                    }
+                }
+                $this->map = $newmap;
+            }
+        }
+    }
+
+    //! @copydoc Set::pop()
+    public function pop()
+    {
+        foreach ($this->map as $key => $value) {
+            unset($this->map[$key]);
+            return $key;
+        }
+        return null;
+    }
+
+    //! @copydoc Set::clear()
+    public function clear()
+    {
+        $this->map = array();
+    }
+
+    //! @copydoc Set::contains()
+    public function contains($value)
+    {
+        return isset($this->map, $value);
     }
 }
