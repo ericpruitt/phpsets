@@ -27,11 +27,6 @@ class Set implements Countable, IteratorAggregate
         }
     }
 
-    public function __isset($key)
-    {
-        return isset($this->map[$key]);
-    }
-
     public function __toString()
     {
         $converted = '';
@@ -249,7 +244,7 @@ class Set implements Countable, IteratorAggregate
      */
     public function isDisjoint($other)
     {
-        return (bool) count($this->intersection($other));
+        return !count($this->intersection($other));
     }
 
     /**
@@ -280,6 +275,6 @@ class Set implements Countable, IteratorAggregate
      */
     public function contains($value)
     {
-        return isset($this->map, $value);
+        return isset($this->map[$value]);
     }
 }

@@ -81,9 +81,9 @@ class SetTests
     {
         assertTrue($this->setA->equals($this->arrayA));
         assertTrue($this->setA->equals($this->iterA));
-        assertTrue(!$this->setA->equals($this->arrayB));
-        assertTrue(!$this->setA->equals($this->setB));
-        assertTrue(!$this->setA->equals($this->iterB));
+        assertFalse($this->setA->equals($this->arrayB));
+        assertFalse($this->setA->equals($this->setB));
+        assertFalse($this->setA->equals($this->iterB));
     }
 
     function test_add()
@@ -140,12 +140,118 @@ class SetTests
         assertEqual($union->toArray(), range(1, 500));
         assertTrue($union->equals($this->setE));
     }
+
+    function test_differenceUpdate_array_subset()
+    {
+        $this->setE->differenceUpdate($this->arrayC);
+        assertTrue($this->setE->equals($this->arrayA));
+    }
+
+    function test_differenceUpdate_set_subset()
+    {
+        $this->setE->differenceUpdate($this->setC);
+        assertTrue($this->setE->equals($this->setA));
+    }
+
+    function test_differenceUpdate_iterable_subset()
+    {
+        $this->setE->differenceUpdate($this->iterC);
+        assertTrue($this->setE->equals($this->iterA));
+    }
+
+    function test_differenceUpdate_array_superset()
+    {
+        $this->setA->differenceUpdate($this->arrayE);
+        assertEqual(count($this->setA), 0);
+    }
+
+    function test_differenceUpdate_set_superset()
+    {
+        $this->setA->differenceUpdate($this->setE);
+        assertEqual(count($this->setA), 0);
+    }
+
+    function test_differenceUpdate_iterable_superset()
+    {
+        $this->setA->differenceUpdate($this->iterE);
+        assertEqual(count($this->setA), 0);
+    }
+
+    function test_differenceUpdate_array_disjoint()
+    {
+        $this->setA->differenceUpdate($this->arrayC);
+        assertEqual(count($this->setA), 250);
+    }
+
+    function test_differenceUpdate_set_disjoint()
+    {
+        $this->setA->differenceUpdate($this->setC);
+        assertEqual(count($this->setA), 250);
+    }
+
+    function test_differenceUpdate_iterable_disjoint()
+    {
+        $this->setA->differenceUpdate($this->iterC);
+        assertEqual(count($this->setA), 250);
+    }
+
+    function test_isDisjoint_array()
+    {
+        assertTrue($this->setA->isDisjoint($this->arrayC));
+        assertFalse($this->setA->isDisjoint($this->arrayB));
+    }
+
+    function test_isDisjoint_set()
+    {
+        assertTrue($this->setA->isDisjoint($this->setC));
+        assertFalse($this->setA->isDisjoint($this->setB));
+    }
+
+    function test_isDisjoint_iterable()
+    {
+        assertTrue($this->setA->isDisjoint($this->iterC));
+        assertFalse($this->setA->isDisjoint($this->iterB));
+    }
+
+    function test_pop()
+    {
+        foreach (range(1, 250) as $k) {
+            $this->setA->pop($k);
+        }
+        assertEqual(count($this->setA), 0);
+    }
+
+    function test_clear()
+    {
+        $this->setA->clear();
+        foreach (range(1, 250) as $k) {
+            assertFalse($this->setA->contains($k));
+        }
+    }
+
+    function test_contains()
+    {
+        foreach (range(1, 500) as $k) {
+            if ($k < 251) {
+                assertTrue($this->setA->contains($k));
+            } else {
+                assertFalse($this->setA->contains($k));
+            }
+        }
+    }
 }
 
 function assertEqual($a, $b, $strict = false)
 {
     if (($strict and !($a === $b)) or !($a == $b)) {
         throw new Exception('Values not equal!');
+    }
+}
+
+function assertFalse($falsehood)
+{
+    if ($falsehood) {
+        throw new Exception('Value not false!');
     }
 }
 
