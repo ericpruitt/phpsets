@@ -195,6 +195,129 @@ class SetTests
         assertEqual(count($this->setA), 250);
     }
 
+    function test_symmetricDifference()
+    {
+        $sd = $this->setA->symmetricDifference($this->setB);
+        foreach (range(1, 124) as $k) {
+            assertTrue($sd->contains($k));
+        }
+        foreach (range(125, 250) as $k) {
+            assertFalse($sd->contains($k));
+        }
+        foreach (range(251, 375) as $k) {
+            assertTrue($sd->contains($k));
+        }
+    }
+
+    function test_symmetricDifferenceUpdate()
+    {
+        $this->setA->symmetricDifferenceUpdate($this->setB);
+        foreach (range(1, 124) as $k) {
+            assertTrue($this->setA->contains($k));
+        }
+        foreach (range(125, 250) as $k) {
+            assertFalse($this->setA->contains($k));
+        }
+        foreach (range(251, 375) as $k) {
+            assertTrue($this->setA->contains($k));
+        }
+    }
+
+    function test_intersectionUpdate_subset_array()
+    {
+        $this->setA->intersectionUpdate($this->arrayD);
+        assertTrue($this->setA->equals($this->arrayD));
+    }
+
+    function test_intersectionUpdate_subset_set()
+    {
+        $this->setA->intersectionUpdate($this->setD);
+        assertTrue($this->setA->equals($this->setD));
+    }
+
+    function test_intersectionUpdate_subset_iterable()
+    {
+        $this->setA->intersectionUpdate($this->iterD);
+        assertTrue($this->setA->equals($this->iterD));
+    }
+
+    function test_intersectionUpdate_disjoint_array()
+    {
+        $this->setA->intersectionUpdate($this->arrayC);
+        assertEqual(count($this->setA), 0);
+    }
+
+    function test_intersectionUpdate_disjoint_set()
+    {
+        $this->setA->intersectionUpdate($this->setC);
+        assertEqual(count($this->setA), 0);
+    }
+
+    function test_intersectionUpdate_disjoint_iterable()
+    {
+        $this->setA->intersectionUpdate($this->iterC);
+        assertEqual(count($this->setA), 0);
+    }
+
+    function test_intersection()
+    {
+        assertEqual(count($this->setA->intersection($this->iterC)), 0);
+    }
+
+    function test_isSuperset_array()
+    {
+        assertTrue($this->setA->isSuperset($this->arrayA));
+        assertFalse($this->setA->isSuperset($this->arrayB));
+        assertFalse($this->setA->isSuperset($this->arrayC));
+        assertTrue($this->setA->isSuperset($this->arrayD));
+        assertFalse($this->setA->isSuperset($this->arrayE));
+    }
+
+    function test_isSuperset_set()
+    {
+        assertTrue($this->setA->isSuperset($this->setA));
+        assertFalse($this->setA->isSuperset($this->setB));
+        assertFalse($this->setA->isSuperset($this->setC));
+        assertTrue($this->setA->isSuperset($this->setD));
+        assertFalse($this->setA->isSuperset($this->setE));
+    }
+
+    function test_isSuperset_iterable()
+    {
+        assertTrue($this->setA->isSuperset($this->iterA));
+        assertFalse($this->setA->isSuperset($this->iterB));
+        assertFalse($this->setA->isSuperset($this->iterC));
+        assertTrue($this->setA->isSuperset($this->iterD));
+        assertFalse($this->setA->isSuperset($this->iterE));
+    }
+
+    function test_isSubset_array()
+    {
+        assertTrue($this->setA->isSubset($this->arrayA));
+        assertFalse($this->setA->isSubset($this->arrayB));
+        assertFalse($this->setA->isSubset($this->arrayC));
+        assertFalse($this->setA->isSubset($this->arrayD));
+        assertTrue($this->setA->isSubset($this->arrayE));
+    }
+
+    function test_isSubset_set()
+    {
+        assertTrue($this->setA->isSubset($this->setA));
+        assertFalse($this->setA->isSubset($this->setB));
+        assertFalse($this->setA->isSubset($this->setC));
+        assertFalse($this->setA->isSubset($this->setD));
+        assertTrue($this->setA->isSubset($this->setE));
+    }
+
+    function test_isSubset_iterable()
+    {
+        assertTrue($this->setA->isSubset($this->iterA));
+        assertFalse($this->setA->isSubset($this->iterB));
+        assertFalse($this->setA->isSubset($this->iterC));
+        assertFalse($this->setA->isSubset($this->iterD));
+        assertTrue($this->setA->isSubset($this->iterE));
+    }
+
     function test_isDisjoint_array()
     {
         assertTrue($this->setA->isDisjoint($this->arrayC));
@@ -216,7 +339,7 @@ class SetTests
     function test_pop()
     {
         foreach (range(1, 250) as $k) {
-            $this->setA->pop($k);
+            $this->setA->pop();
         }
         assertEqual(count($this->setA), 0);
     }

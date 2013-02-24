@@ -213,11 +213,11 @@ class Set implements Countable, IteratorAggregate
      */
     public function isSuperset($other)
     {
-        if (count($this) < count($other)) {
+        $other = is_a($other, 'Set') ? $other : new self($other);
+        if (count($other) > count($this)) {
             return false;
         }
 
-        $other = is_a($other, 'Set') ? $other : new self($other);
         return !count($other->difference($this));
     }
 
@@ -229,7 +229,8 @@ class Set implements Countable, IteratorAggregate
      */
     public function isSubset($other)
     {
-        if (count($other) < count($this)) {
+        if ((is_array($other) or is_a($other, 'Set')) and
+          count($other) < count($this)) {
             return false;
         }
 
