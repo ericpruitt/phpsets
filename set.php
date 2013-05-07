@@ -36,7 +36,7 @@ class Set implements Countable, IteratorAggregate
             if (strlen($converted)) {
                 $converted .= ', ';
             }
-            if (is_numeric($member)) {
+            if (is_numeric($member) or is_bool($member)) {
                 $converted .= $member;
             } else {
                 $converted .= '"' . addslashes($member) . '"';
