@@ -13,6 +13,7 @@ class Set implements Countable, IteratorAggregate
 {
     /**
      * Associative array with the set members stored as keys.
+     *
      * @access protected
      * @var array
      */
@@ -56,6 +57,7 @@ class Set implements Countable, IteratorAggregate
 
     /**
      * Return an array containing the members of the set.
+     *
      * @param bool $sort Indicates if array should be sorted. Defaults to true.
      * @return array Array containing the members of the set.
      */
@@ -70,6 +72,7 @@ class Set implements Countable, IteratorAggregate
 
     /**
      * Return value indicating if two sets contain the same members.
+     *
      * @param mixed $other
      * @return bool
      */
@@ -81,6 +84,7 @@ class Set implements Countable, IteratorAggregate
 
     /**
      * Add a member to the set.
+     *
      * @param mixed $member
      */
     public function add($member)
@@ -90,6 +94,7 @@ class Set implements Countable, IteratorAggregate
 
     /**
      * Remove a member from the set.
+     *
      * @param mixed $member
      */
     public function remove($member)
@@ -99,6 +104,7 @@ class Set implements Countable, IteratorAggregate
 
     /**
      * Add members from another set or sets to this set.
+     *
      * @param mixed $other,...
      */
     public function update($other)
@@ -110,8 +116,9 @@ class Set implements Countable, IteratorAggregate
         }
     }
 
-    /*
+    /**
      * Return union of instance set and one or more other sets.
+     *
      * @param mixed $other,...
      * @return Set
      */
@@ -124,6 +131,7 @@ class Set implements Countable, IteratorAggregate
 
     /**
      * Remove elements in another set or sets from this set.
+     *
      * @param mixed $other,...
      */
     public function differenceUpdate($other)
@@ -141,6 +149,7 @@ class Set implements Countable, IteratorAggregate
 
     /**
      * Return set with members from another set or sets removed.
+     *
      * @param mixed $other,...
      * @return Set
      */
@@ -154,6 +163,7 @@ class Set implements Countable, IteratorAggregate
     /**
      * Return symmetric differnce of this set with another, that is, all
      * elements that are present in either one set or the other, but not both.
+     *
      * @param mixed $other
      * @return Set
      */
@@ -165,6 +175,7 @@ class Set implements Countable, IteratorAggregate
 
     /**
      * Remove all elements in common with another set from this set.
+     *
      * @param mixed $other
      */
     public function symmetricDifferenceUpdate($other)
@@ -174,6 +185,7 @@ class Set implements Countable, IteratorAggregate
 
     /**
      * Remove all elements not shared with other sets from this set.
+     *
      * @param mixed $other,...
      */
     public function intersectionUpdate($other)
@@ -195,6 +207,7 @@ class Set implements Countable, IteratorAggregate
 
     /**
      * Return all elements in common with another set or sets.
+     *
      * @param mixed $other,...
      * @return Set
      */
@@ -208,6 +221,7 @@ class Set implements Countable, IteratorAggregate
     /**
      * Return value indicating whether this set contains all the elements of
      * another set.
+     *
      * @param mixed $other
      * @return boolean
      */
@@ -224,6 +238,7 @@ class Set implements Countable, IteratorAggregate
     /**
      * Return value indicating whether this all of this sets members are also
      * members of another set.
+     *
      * @param mixed $other
      * @return boolean
      */
@@ -240,6 +255,7 @@ class Set implements Countable, IteratorAggregate
     /**
      * Return value indicating if that set has no values in common with another
      * set.
+     *
      * @param mixed $other
      * @return boolean
      */
@@ -250,6 +266,7 @@ class Set implements Countable, IteratorAggregate
 
     /**
      * Remove and return an arbitrary item from this set.
+     *
      * @return mixed Returns the popped value or null of the set is empty.
      */
     public function pop()
@@ -271,6 +288,7 @@ class Set implements Countable, IteratorAggregate
 
     /**
      * Return value indicating whether the parameter is a member of this set.
+     *
      * @param mixed $value
      * @return boolean
      */
