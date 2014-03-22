@@ -1,15 +1,15 @@
 <?php
 /**
  * This is an implemention of mathematical sets in PHP based on Python's
- * implementation of sets. All methods that accept another Set or
- * Set will also work with arrays or any object that implements the
- * Iterator interface.
+ * implementation of sets. All methods that accept another Set or Sets will
+ * also work with arrays or any object that implements the Iterator interface.
  *
  * @author Eric Pruitt <eric.pruitt@gmail.com>
  * @package set
  */
+namespace Codevat;
 
-class Set implements Countable, IteratorAggregate
+class Set implements \Countable, \IteratorAggregate
 {
     /**
      * Associative array with the set members stored as keys.
@@ -52,7 +52,7 @@ class Set implements Countable, IteratorAggregate
 
     public function getIterator()
     {
-        return new ArrayIterator(array_keys($this->map));
+        return new \ArrayIterator(array_keys($this->map));
     }
 
     /**
