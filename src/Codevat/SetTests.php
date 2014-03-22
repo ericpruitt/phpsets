@@ -350,6 +350,13 @@ class SetTests
             $this->setA->pop();
         }
         self::assertEqual(count($this->setA), 0);
+
+        try {
+            $this->setA->pop();
+            throw new \Exception("Pop did not throw expected exception");
+        } catch (\OutOfBoundsException $e) {
+            // ...
+        }
     }
 
     public function test_clear()

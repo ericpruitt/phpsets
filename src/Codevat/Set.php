@@ -275,7 +275,8 @@ class Set implements \Countable, \IteratorAggregate
             unset($this->map[$key]);
             return $key;
         }
-        return null;
+
+        throw new \OutOfBoundsException("Cannot pop from an empty set");
     }
 
     /**
