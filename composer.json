@@ -1,0 +1,28 @@
+{
+    "name": "codevat/set",
+    "type": "library",
+    "description": "Python's \"set\" built-in ported to PHP",
+    "keywords": ["set", "python"],
+    "license": "BSD-2-Clause",
+
+    "authors": [
+        {
+            "name": "Eric Pruitt",
+            "email": "eric.pruitt@gmail.com",
+            "role": "Developer"
+        }
+    ],
+
+    "autoload" : {
+        "psr-0": {
+            "Codevat": "src"
+        }
+    },
+
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ericpruitt/phpsets"
+        }
+    ],
+}

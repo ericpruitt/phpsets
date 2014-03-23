@@ -1,4 +1,11 @@
 <?php
+/**
+ * Python's "set" builtin ported to PHP
+ *
+ * @author  Eric Pruitt <eric.pruitt@gmail.com>
+ * @license BSD 2-Clause
+ * @link    http://codevat.com/
+ */
 namespace Codevat;
 
 /**
