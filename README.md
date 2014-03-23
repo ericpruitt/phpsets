@@ -8,26 +8,43 @@ camel-case ones, and like the Python implementation of sets, all of the methods
 that accept sets also accept arrays or any other object that implements the
 Iterator interface.
 
+Although written for Python, many of the concepts discussed in my tutorial
+["Using Sets In Python"](http://codevat.com/sets.html) also apply to this
+class.
+
+Documentation
+-------------
+
+Each of the methods of the `Set` class has been documented using
+inline-documentation in the phpDocumentor2 format.
+
 Examples
 --------
 
-Basic element addition:
+**NOTE:** All examples take place in a scope with `use \Codevat\Set;` declared.
 
-    php> $set = new Set(Array(1, 2, 3, 4, 5));
-    php> $set->add(10);
-    php> echo $set;
-    {1, 2, 3, 4, 5, 10}
-    php> $set->remove(5);
-    php> echo $set;
-    {1, 2, 3, 4, 10}
-    php> $set->update(Array(15, 16, 17));
-    php> echo $set;
-    {1, 2, 3, 4, 10, 15, 16, 17}
+
+Basic element addition and deletion:
+
+    php> $nouns = new Set(array("axe", "horse", "duck"));
+    php> $nouns->add("dog");
+    php> echo $nouns;
+    {"axe", "horse", "duck", "dog"}
+    php> $nouns->remove("axe");
+    php> echo $nouns;
+    {"horse", "duck", "dog"}
+    php> $nouns->update(array("car", "grass"));
+    php> echo $nouns;
+    {"horse", "duck", "dog", "car", "grass"}
+    php> var_dump($nouns->contains("pooch"));
+    bool(false)
+    php> var_dump($nouns->contains("duck"));
+    bool(true)
 
 Intersections, differences and unions:
 
-    php> $group_one = new Set(Array(10, 20, 30, 40, 50));
-    php> $group_two = new Set(Array(40, 50, 60, 70, 80));
+    php> $group_one = new Set(array(10, 20, 30, 40, 50));
+    php> $group_two = new Set(array(40, 50, 60, 70, 80));
     php> echo $group_one->intersection($group_two);
     {40, 50}
     php> echo $group_one->difference($group_two);
@@ -35,34 +52,22 @@ Intersections, differences and unions:
     php> echo $group_one->union($group_two);
     {10, 20, 30, 40, 50, 60, 70, 80}
 
-Full Method List
-----------------
+The various update methods modify sets in-place:
 
-Below is a list of all of the methods in the code along with examples. Note
-that anywhere an array is used, a Set can be used in its place.
+    php> $pets = new Set(array("alligator", "anole", "cat", "spiders"));
+    php> $reptiles = new Set(array("alligator", "turtle", "anole"));
+    php> $pets->differenceUpdate($reptiles);
+    php> echo $pets;
+    {"alligator", "cat", "spiders"}
 
-### Set::add ###
+Some miscellaneous operations:
 
-Add a member to the set.
-
-    php> $set = new Set(Array(1, 2, 3, 4, 5));
-    php> $set->add(10);
-    php> echo $set;
-    {1, 2, 3, 4, 5, 10}
-
-### Set::remove ###
-
-Remove a member from the set.
-
-    php> $set = new Set(Array(1, 2, 3, 4, 5));
-    php> $set->remove(3);
-    php> echo $set;
-    {1, 2, 4, 5}
-
-### Set::update ###
-
-    php> $set = new Set(Array(1, 2, 3));
-    php> $set->update(Array(7, 8, 9));
-    php> echo $set;
-    {1, 2, 3, 7, 8, 9}
-
+    php> $birds = new Set(array("hawk", "pigeon", "owl", "swallow"));
+    php> $raptors = new Set(array("falcon", "hawk", "owl", "hawk", "eagle"));
+    php> var_dump($raptors->isSubset($birds));
+    bool(true)
+    php> $mammals = new Set(array("dog", "cat", "beaver", "horse"));
+    php> var_dump($mammals->isSuperset($birds));
+    bool(false)
+    php> var_dump($mammals->isDisjoint($birds));
+    bool(true)
