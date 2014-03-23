@@ -1,14 +1,11 @@
 <?php
-/**
- * This is an implemention of mathematical sets in PHP based on Python's
- * implementation of sets. All methods that accept another Set or Sets will
- * also work with arrays or any object that implements the Iterator interface.
- *
- * @author Eric Pruitt <eric.pruitt@gmail.com>
- * @package set
- */
 namespace Codevat;
 
+/**
+ * This is an implemention of mathematical sets in based on Python's builtin
+ * `set` object. All methods that accept another Set or Sets will also work
+ * with arrays or any other object that implements the Iterator interface.
+ */
 class Set implements \Countable, \IteratorAggregate
 {
     /**
@@ -19,6 +16,12 @@ class Set implements \Countable, \IteratorAggregate
      */
     protected $map = array();
 
+    /**
+     * Instantiate new `Set`.
+     *
+     * @param $members Elements the new set should contain. When not specified,
+     * the newly created set will be empty.
+     */
     public function __construct($members = null)
     {
         if ($members) {
@@ -28,6 +31,11 @@ class Set implements \Countable, \IteratorAggregate
         }
     }
 
+    /**
+     * Return string representation of the set.
+     *
+     * @return string Representation of the set.
+     */
     public function __toString()
     {
         $converted = '';
@@ -45,11 +53,22 @@ class Set implements \Countable, \IteratorAggregate
         return '{' . $converted . '}';
     }
 
+    /**
+     * Return the number of elements in the set.
+     *
+     * @param integer Number of elements in the set.
+     */
     public function count()
     {
         return count($this->map);
     }
 
+    /**
+     * Return an iterator for the set.
+     *
+     * @return \ArrayIterator An iterator that iterates over all the elements
+     * in the set.
+     */
     public function getIterator()
     {
         return new \ArrayIterator(array_keys($this->map));
@@ -59,6 +78,7 @@ class Set implements \Countable, \IteratorAggregate
      * Return an array containing the members of the set.
      *
      * @param bool $sort Indicates if array should be sorted. Defaults to true.
+     *
      * @return array Array containing the members of the set.
      */
     public function toArray($sort = true)
@@ -73,8 +93,9 @@ class Set implements \Countable, \IteratorAggregate
     /**
      * Return value indicating if two sets contain the same members.
      *
-     * @param mixed $other
-     * @return bool
+     * @param mixed $other Set to compare to.
+     *
+     * @return bool Value indicating the equality of the sets.
      */
     public function equals($other)
     {
@@ -85,7 +106,7 @@ class Set implements \Countable, \IteratorAggregate
     /**
      * Add a member to the set.
      *
-     * @param mixed $member
+     * @param mixed $member New set member.
      */
     public function add($member)
     {
@@ -95,7 +116,7 @@ class Set implements \Countable, \IteratorAggregate
     /**
      * Remove a member from the set.
      *
-     * @param mixed $member
+     * @param mixed $member Set member to be removed.
      */
     public function remove($member)
     {
@@ -105,7 +126,8 @@ class Set implements \Countable, \IteratorAggregate
     /**
      * Add members from another set or sets to this set.
      *
-     * @param mixed $other,...
+     * @param mixed $other ,... One or more iterables whose elements should be
+     * added to the set.
      */
     public function update($other)
     {
@@ -119,8 +141,10 @@ class Set implements \Countable, \IteratorAggregate
     /**
      * Return union of instance set and one or more other sets.
      *
-     * @param mixed $other,...
-     * @return Set
+     * @param mixed $other ,... One or more iterables whose elements should be
+     * included in the returned set.
+     *
+     * @return Set Result set operaton.
      */
     public function union($other)
     {
@@ -132,7 +156,8 @@ class Set implements \Countable, \IteratorAggregate
     /**
      * Remove elements in another set or sets from this set.
      *
-     * @param mixed $other,...
+     * @param mixed $other ,... One or more iterables whose elements should be
+     * removed from the set.
      */
     public function differenceUpdate($other)
     {
@@ -150,8 +175,10 @@ class Set implements \Countable, \IteratorAggregate
     /**
      * Return set with members from another set or sets removed.
      *
-     * @param mixed $other,...
-     * @return Set
+     * @param mixed $other ,... One or more iterables whose elements should not
+     * be present in the returned set.
+     *
+     * @return Set Result of set operation.
      */
     public function difference($other)
     {
@@ -164,8 +191,9 @@ class Set implements \Countable, \IteratorAggregate
      * Return symmetric differnce of this set with another, that is, all
      * elements that are present in either one set or the other, but not both.
      *
-     * @param mixed $other
-     * @return Set
+     * @param mixed $other Another set or iterable.
+     *
+     * @return Set Result of set operation.
      */
     public function symmetricDifference($other)
     {
@@ -174,9 +202,9 @@ class Set implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Remove all elements in common with another set from this set.
+     * Remove all elements present in both sets from this set.
      *
-     * @param mixed $other
+     * @param mixed $other Another set or iterable.
      */
     public function symmetricDifferenceUpdate($other)
     {
@@ -186,7 +214,7 @@ class Set implements \Countable, \IteratorAggregate
     /**
      * Remove all elements not shared with other sets from this set.
      *
-     * @param mixed $other,...
+     * @param mixed $other ,... One or more sets or iterables.
      */
     public function intersectionUpdate($other)
     {
@@ -208,8 +236,9 @@ class Set implements \Countable, \IteratorAggregate
     /**
      * Return all elements in common with another set or sets.
      *
-     * @param mixed $other,...
-     * @return Set
+     * @param mixed $other ,... One or more iterables to be intersected.
+     *
+     * @return Set Result of set operation.
      */
     public function intersection($other)
     {
@@ -222,8 +251,10 @@ class Set implements \Countable, \IteratorAggregate
      * Return value indicating whether this set contains all the elements of
      * another set.
      *
-     * @param mixed $other
-     * @return boolean
+     * @param mixed $other Set or iterable tested for inclusion.
+     *
+     * @return bool Value indicating whether or not this set is a superset
+     * of the given collection.
      */
     public function isSuperset($other)
     {
@@ -236,11 +267,13 @@ class Set implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Return value indicating whether this all of this sets members are also
+     * Return value indicating whether all of this set's members are also
      * members of another set.
      *
-     * @param mixed $other
-     * @return boolean
+     * @param mixed $other Set or iterable tested for inclusion.
+     *
+     * @return bool Value indicating whether or not this set is a subset of
+     * the given collection.
      */
     public function isSubset($other)
     {
@@ -257,7 +290,9 @@ class Set implements \Countable, \IteratorAggregate
      * set.
      *
      * @param mixed $other
-     * @return boolean
+     *
+     * @return bool Value indicating if this set has no values in common with
+     * the other set.
      */
     public function isDisjoint($other)
     {
@@ -267,7 +302,9 @@ class Set implements \Countable, \IteratorAggregate
     /**
      * Remove and return an arbitrary item from this set.
      *
-     * @return mixed Returns the popped value or null of the set is empty.
+     * @throws \OutOfBoundsException if the set is empty.
+     *
+     * @return mixed Returns the popped value.
      */
     public function pop()
     {
@@ -290,8 +327,10 @@ class Set implements \Countable, \IteratorAggregate
     /**
      * Return value indicating whether the parameter is a member of this set.
      *
-     * @param mixed $value
-     * @return boolean
+     * @param mixed $value Value to test for membership.
+     *
+     * @return bool Value indicating whether or not the given value is a member
+     * of this set.
      */
     public function contains($value)
     {
