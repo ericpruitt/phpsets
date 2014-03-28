@@ -1,5 +1,6 @@
 <?php
-namespace Codevat;
+namespace Codevat\Tests;
+use Codevat\Set;
 
 class SetTests
 {
